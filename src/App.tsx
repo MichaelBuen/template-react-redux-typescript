@@ -4,6 +4,14 @@ import './App.css';
 
 import { hot } from 'react-hot-loader/root';
 
+import { connect } from 'react-redux';
+
+import { mapStateToProps } from './store/logged-user/state-mapper';
+import { mapDispatchToProps } from './store/logged-user/dispatchers-mapper';
+
+import { ILoggedUserDispatchers } from './store/logged-user/dispatchers';
+import { ILoggedUserState } from './store/logged-user/state';
+
 
 interface IComponentState
 {
@@ -11,9 +19,11 @@ interface IComponentState
     counter: number;
 }
 
-class App extends Component<object, IComponentState>
+type ComponentProps = ILoggedUserDispatchers & ILoggedUserState;
+
+class App extends Component<ComponentProps, IComponentState>
 {
-    constructor(props: {})
+    constructor(props: ComponentProps)
     {
         super(props);
 
@@ -37,6 +47,9 @@ class App extends Component<object, IComponentState>
 
                     <p>{this.state.message}</p>
                     <button onClick={this.increment}>Increment {this.state.counter}</button>
+
+                    <button onClick={() => this.props.getLoggedUser()}>Get logged user</button>
+                    <div>{this.props.username}</div>
                     <a
                         className="App-link"
                         href="https://reactjs.org"
@@ -51,4 +64,6 @@ class App extends Component<object, IComponentState>
     }
 }
 
-export default hot(App);
+export default connect(mapStateToProps, mapDispatchToProps)(hot(App));
+
+
