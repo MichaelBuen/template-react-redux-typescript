@@ -51,7 +51,7 @@ class App extends Component<ComponentProps, IComponentState>
                     <button onClick={() => this.props.getLoggedUser()}>Get logged user</button>
                     <div>{this.props.username}</div>
                     <a
-                        className="App-link"
+
                         href="https://reactjs.org"
                         target="_blank"
                         rel="noopener noreferrer"
