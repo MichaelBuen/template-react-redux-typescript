@@ -6,12 +6,14 @@ import { hot } from 'react-hot-loader/root';
 
 import { connect } from 'react-redux';
 
-import { mapStateToProps } from './store/logged-user/state-mapper';
-import { mapDispatchToProps } from './store/logged-user/dispatchers-mapper';
-
-import { ILoggedUserDispatchers } from './store/logged-user/dispatchers';
 import { ILoggedUserState } from './store/logged-user/state';
 
+import { ILoggedUserDispatchers } from './store/logged-user/dispatchers';
+
+import { setColorTheme, setLoggedUser } from './store/logged-user/action-creators';
+import { IAllState } from './store/all-state';
+import { incrementCounter } from './store/counter/action-creators';
+import { ICounterDispatchers } from './store/counter/dispatchers';
 
 interface IComponentState
 {
@@ -19,11 +21,34 @@ interface IComponentState
     counter: number;
 }
 
-type ComponentProps = ILoggedUserDispatchers & ILoggedUserState;
-
-class App extends Component<ComponentProps, IComponentState>
+interface IUserDto
 {
-    constructor(props: ComponentProps)
+    id: number;
+    username: string;
+}
+
+
+interface IPropsToUse
+{
+    username: ILoggedUserState['username'];
+    colorTheme: ILoggedUserState['colorTheme'];
+    counter: number;
+}
+
+
+// interface IPropsToUse
+// {
+//     username: ILoggedUserState['username'];
+//     colorTheme: ILoggedUserState['colorTheme'];
+//     counter: number;
+// }
+
+type Props = IPropsToUse & ILoggedUserDispatchers & ICounterDispatchers;
+
+
+class App extends Component<Props, IComponentState>
+{
+    constructor(props: Props)
     {
         super(props);
 
@@ -33,7 +58,25 @@ class App extends Component<ComponentProps, IComponentState>
         };
     }
 
-    increment = () => this.setState({counter: this.state.counter + 1});
+    increment = (n: number) => this.props.incrementCounter(n);
+
+
+    getLoggedUser = async () =>
+    {
+        const userRequest = await fetch('https://jsonplaceholder.typicode.com/users/1');
+
+        const {status} = userRequest;
+
+        if (!(status === 200 || status === 301)) {
+            throw new Error('HTTP Status: ' + status);
+        }
+
+        const {username} = await userRequest.json() as IUserDto;
+
+        this.props.setLoggedUser(username);
+
+        this.props.setColorTheme('blue');
+    };
 
     render()
     {
@@ -42,14 +85,18 @@ class App extends Component<ComponentProps, IComponentState>
                 <header className="App-header">
                     <img src={logo} className="App-logo" alt="logo"/>
                     <p>
-                        Edit <code>src/App.tsx</code> and save to reload.
+                        Edit <code>src/App.tsx</code> and save to reload. Hello
                     </p>
 
                     <p>{this.state.message}</p>
-                    <button onClick={this.increment}>Increment {this.state.counter}</button>
 
-                    <button onClick={() => this.props.getLoggedUser()}>Get logged user</button>
+                    <button onClick={() => this.increment(5)}>Increment {this.props.counter}</button>
+
+                    <button onClick={this.getLoggedUser}>Get logged user</button>
                     <div>{this.props.username}</div>
+
+                    <div style={{color: this.props.colorTheme}}>{this.props.colorTheme}</div>
+
                     <a
 
                         href="https://reactjs.org"
@@ -64,6 +111,21 @@ class App extends Component<ComponentProps, IComponentState>
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(hot(App));
+
+export const mapStateToProps =
+                 ({
+                      loggedUser: {username, colorTheme},
+                      counter
+                  }: IAllState): IPropsToUse => ({
+                     username,
+                     colorTheme,
+                     counter,
+                 });
+
+const actionCreators = {
+    setLoggedUser, setColorTheme, incrementCounter
+};
+
+export default connect(mapStateToProps, actionCreators)(hot(App));
 
 

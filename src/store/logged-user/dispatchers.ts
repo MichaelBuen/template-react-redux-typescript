@@ -1,4 +1,7 @@
+import { setColorTheme, setLoggedUser } from './action-creators';
+
 export interface ILoggedUserDispatchers
 {
-    getLoggedUser: () => Promise<void>;
+    setLoggedUser: typeof setLoggedUser;
+    setColorTheme: typeof setColorTheme;
 }

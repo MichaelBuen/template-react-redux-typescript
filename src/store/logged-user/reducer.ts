@@ -1,8 +1,9 @@
 import { ILoggedUserState } from './state';
 import { LoggedUserAction } from './action';
 import { LoggedUserActionType } from './action-type';
+import { Reducer } from 'redux';
 
-export const loggedUserReducer = (state: ILoggedUserState = {} as any, action: LoggedUserAction) =>
+export const loggedUser: Reducer<ILoggedUserState, LoggedUserAction> = (state, action) =>
 {
     switch (action.type) {
         case LoggedUserActionType.LOGGED_USER__SET_USERNAME:
@@ -17,5 +18,5 @@ export const loggedUserReducer = (state: ILoggedUserState = {} as any, action: L
             }
     }
 
-    return state;
+    return state || {} as any;
 };

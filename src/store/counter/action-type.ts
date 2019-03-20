@@ -1,0 +1,6 @@
+export enum CounterActionType
+{
+    COUNTER__INCREMENT = 'COUNTER__INCREMENT',
+    COUNTER__DECREMENT = 'COUNTER__DECREMENT',
+    COUNTER__RESET     = 'COUNTER__RESET',
+}
