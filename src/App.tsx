@@ -10,7 +10,7 @@ import { ILoggedUserState } from './store/logged-user/state';
 
 import { ILoggedUserDispatchers } from './store/logged-user/dispatchers';
 
-import { setColorTheme, setLoggedUser } from './store/logged-user/action-creators';
+import { getLoggedUser, setColorTheme, setLoggedUser } from './store/logged-user/action-creators';
 import { IAllState } from './store/all-state';
 import { incrementCounter } from './store/counter/action-creators';
 import { ICounterDispatchers } from './store/counter/dispatchers';
@@ -21,12 +21,12 @@ interface IComponentState
     counter: number;
 }
 
-interface IUserDto
-{
-    id: number;
-    username: string;
-}
 
+function delay(ms: number) {
+    return new Promise<void>(function(resolve) {
+        setTimeout(resolve, ms);
+    });
+}
 
 interface IPropsToUse
 {
@@ -56,27 +56,41 @@ class App extends Component<Props, IComponentState>
             message: 'hello world',
             counter: 0,
         };
+
+        this.blah = this.blah.bind(this);
     }
 
     increment = (n: number) => this.props.incrementCounter(n);
 
 
-    getLoggedUser = async () =>
-    {
-        const userRequest = await fetch('https://jsonplaceholder.typicode.com/users/1');
+    // getLoggedUser = async () =>
+    // {
+    //     const userRequest = await fetch('https://jsonplaceholder.typicode.com/users/1');
+    //
+    //     const {status} = userRequest;
+    //
+    //     if (!(status === 200 || status === 301)) {
+    //         throw new Error('HTTP Status: ' + status);
+    //     }
+    //
+    //     const {username} = await userRequest.json() as IUserDto;
+    //
+    //     this.props.setLoggedUser(username);
+    //
+    //     this.props.setColorTheme('blue');
+    // };
 
-        const {status} = userRequest;
+    // blah(): void {
+    //     this.props.getLoggedUser();
+    // }
 
-        if (!(status === 200 || status === 301)) {
-            throw new Error('HTTP Status: ' + status);
-        }
+    async blah(): Promise<void> {
+        await this.props.getLoggedUser();
 
-        const {username} = await userRequest.json() as IUserDto;
+        await delay(5000);
+        window.alert('yo');
 
-        this.props.setLoggedUser(username);
-
-        this.props.setColorTheme('blue');
-    };
+    }
 
     render()
     {
@@ -92,7 +106,8 @@ class App extends Component<Props, IComponentState>
 
                     <button onClick={() => this.increment(5)}>Increment {this.props.counter}</button>
 
-                    <button onClick={this.getLoggedUser}>Get logged user</button>
+                    {/*<button onClick={async () => await this.props.getLoggedUser()}>Get logged user</button>*/}
+                    <button onClick={this.props.getLoggedUser}>Get logged user</button>
                     <div>{this.props.username}</div>
 
                     <div style={{color: this.props.colorTheme}}>{this.props.colorTheme}</div>
@@ -123,7 +138,7 @@ export const mapStateToProps =
                  });
 
 const actionCreators = {
-    setLoggedUser, setColorTheme, incrementCounter
+    setLoggedUser, setColorTheme, incrementCounter, getLoggedUser
 };
 
 export default connect(mapStateToProps, actionCreators)(hot(App));
