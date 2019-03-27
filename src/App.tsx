@@ -72,10 +72,6 @@ class App extends Component<Props, IComponentState>
         await this.props.getLoggedUser(2);
 
         await this.props.incrementCounter(100);
-
-        await delay(5000);
-        window.alert('yo');
-
     }
 
     render()
@@ -92,8 +88,7 @@ class App extends Component<Props, IComponentState>
 
                     <button onClick={() => this.increment(5)}>Increment {this.props.counter}</button>
 
-                    {/*<button onClick={async () => await this.props.getLoggedUser()}>Get logged user</button>*/}
-                    <button onClick={() => this.blah()}>Get logged user</button>
+                    <button onClick={this.blah}>Get logged user</button>
                     <div>{this.props.username}</div>
 
                     <div style={{color: this.props.colorTheme}}>{this.props.colorTheme}</div>
