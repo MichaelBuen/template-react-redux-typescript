@@ -8,9 +8,10 @@ import { connect } from 'react-redux';
 
 import { ILoggedUserState } from './store/logged-user/state';
 
-import { getLoggedUser, setColorTheme, setLoggedUser } from './store/logged-user/action-creators';
 import { IAllState } from './store/all-state';
-import { incrementCounter } from './store/counter/action-creators';
+
+import { incrementCounter } from './store/counter/actions+reducers';
+import { getLoggedUser, setColorTheme, setLoggedUser } from './store/logged-user/actions+reducers';
 
 interface IComponentState
 {
@@ -67,28 +68,6 @@ class App extends Component<Props, IComponentState>
 
     increment = (n: number) => this.props.incrementCounter(n);
 
-
-    // getLoggedUser = async () =>
-    // {
-    //     const userRequest = await fetch('https://jsonplaceholder.typicode.com/users/1');
-    //
-    //     const {status} = userRequest;
-    //
-    //     if (!(status === 200 || status === 301)) {
-    //         throw new Error('HTTP Status: ' + status);
-    //     }
-    //
-    //     const {username} = await userRequest.json() as IUserDto;
-    //
-    //     this.props.setLoggedUser(username);
-    //
-    //     this.props.setColorTheme('blue');
-    // };
-
-    // blah(): void {
-    //     this.props.getLoggedUser();
-    // }
-
     async blah(): Promise<void> {
         await this.props.getLoggedUser(2);
 
@@ -133,38 +112,6 @@ class App extends Component<Props, IComponentState>
     }
 }
 
-
-
-
-interface IUserDto
-{
-    id: number;
-    username: string;
-}
-
-//
-// const mapDispatchToProps = (dispatch: Dispatch) => ({
-//     // incrementCounter: (n?: number) => dispatch(incrementCounter(n)),
-//     incrementCounter,
-//     getLoggedUser: async () => {
-//         const userRequest = await fetch('https://jsonplaceholder.typicode.com/users/1');
-//
-//         const {status} = userRequest;
-//
-//         if (!(status === 200 || status === 301)) {
-//             throw new Error('HTTP Status: ' + status);
-//         }
-//
-//         const {username} = await userRequest.json() as IUserDto;
-//
-//         await dispatch(setLoggedUser(username));
-//
-//         await dispatch(setColorTheme('blue'));
-//
-//     }
-// });
-
 export default connect(mapStateToProps, actionCreators)((hot as any)(App));
-// export default connect(mapStateToProps, actionCreators)(hot(App));
 
 
