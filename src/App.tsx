@@ -20,8 +20,10 @@ interface IComponentState
 }
 
 
-function delay(ms: number) {
-    return new Promise<void>(function(resolve) {
+function delay(ms: number)
+{
+    return new Promise<void>(function (resolve)
+    {
         setTimeout(resolve, ms);
     });
 }
@@ -68,10 +70,9 @@ class App extends Component<Props, IComponentState>
 
     increment = (n: number) => this.props.incrementCounter(n);
 
-    async blah(): Promise<void> {
+    async blah(): Promise<void>
+    {
         await this.props.getLoggedUser(2);
-
-        await this.props.incrementCounter(100);
     }
 
     render()
