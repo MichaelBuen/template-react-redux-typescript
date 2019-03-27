@@ -1,4 +1,5 @@
 import { Reducer } from 'redux';
+import { CounterType } from './state';
 
 enum CounterActionType
 {
@@ -40,7 +41,7 @@ export const resetCounter = (): CounterAction => ({
 });
 
 
-export const counter: Reducer<number, CounterAction> = (state = 0, action) =>
+export const counter: Reducer<CounterType, CounterAction> = (state = 0, action) =>
 {
     switch(action.type) {
         case CounterActionType.COUNTER__INCREMENT:

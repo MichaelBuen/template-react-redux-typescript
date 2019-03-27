@@ -12,6 +12,7 @@ import { IAllState } from './store/all-state';
 
 import { incrementCounter } from './store/counter/actions+reducers';
 import { getLoggedUser, setColorTheme, setLoggedUser } from './store/logged-user/actions+reducers';
+import { CounterType } from './store/counter/state';
 
 interface IComponentState
 {
@@ -32,7 +33,7 @@ interface IPropsToUse
 {
     username: ILoggedUserState['username'];
     colorTheme: ILoggedUserState['colorTheme'];
-    counter: number;
+    counter: CounterType;
 }
 
 const actionCreators = {
