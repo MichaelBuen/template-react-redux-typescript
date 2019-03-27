@@ -2,7 +2,6 @@ import { LoggedUserAction } from './action';
 import { LoggedUserActionType } from './action-type';
 import { Dispatch } from 'redux';
 
-
 export const setLoggedUser = (username: string): LoggedUserAction => ({
     type: LoggedUserActionType.LOGGED_USER__SET_USERNAME,
     username
@@ -21,9 +20,9 @@ interface IUserDto
 
 
 
-export const getLoggedUser = () => async (dispatch: Dispatch): Promise<void> =>
+export const getLoggedUser = (n: number) => async (dispatch: Dispatch): Promise<void> =>
 {
-    const userRequest = await fetch('https://jsonplaceholder.typicode.com/users/1');
+    const userRequest = await fetch(`https://jsonplaceholder.typicode.com/users/${n}`);
 
     const {status} = userRequest;
 

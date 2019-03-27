@@ -8,12 +8,9 @@ import { connect } from 'react-redux';
 
 import { ILoggedUserState } from './store/logged-user/state';
 
-import { ILoggedUserDispatchers } from './store/logged-user/dispatchers';
-
 import { getLoggedUser, setColorTheme, setLoggedUser } from './store/logged-user/action-creators';
 import { IAllState } from './store/all-state';
 import { incrementCounter } from './store/counter/action-creators';
-import { ICounterDispatchers } from './store/counter/dispatchers';
 
 interface IComponentState
 {
@@ -35,15 +32,23 @@ interface IPropsToUse
     counter: number;
 }
 
+const actionCreators = {
+    setLoggedUser, setColorTheme,
+    incrementCounter,
+    getLoggedUser,
+};
 
-// interface IPropsToUse
-// {
-//     username: ILoggedUserState['username'];
-//     colorTheme: ILoggedUserState['colorTheme'];
-//     counter: number;
-// }
+export const mapStateToProps =
+                 ({
+                      loggedUser: {username, colorTheme},
+                      counter
+                  }: IAllState): IPropsToUse => ({
+                     username,
+                     colorTheme,
+                     counter,
+                 });
 
-type Props = IPropsToUse & ILoggedUserDispatchers & ICounterDispatchers;
+type Props = IPropsToUse & typeof actionCreators;
 
 
 class App extends Component<Props, IComponentState>
@@ -85,7 +90,9 @@ class App extends Component<Props, IComponentState>
     // }
 
     async blah(): Promise<void> {
-        await this.props.getLoggedUser();
+        await this.props.getLoggedUser(2);
+
+        await this.props.incrementCounter(100);
 
         await delay(5000);
         window.alert('yo');
@@ -107,7 +114,7 @@ class App extends Component<Props, IComponentState>
                     <button onClick={() => this.increment(5)}>Increment {this.props.counter}</button>
 
                     {/*<button onClick={async () => await this.props.getLoggedUser()}>Get logged user</button>*/}
-                    <button onClick={this.props.getLoggedUser}>Get logged user</button>
+                    <button onClick={() => this.blah()}>Get logged user</button>
                     <div>{this.props.username}</div>
 
                     <div style={{color: this.props.colorTheme}}>{this.props.colorTheme}</div>
@@ -127,20 +134,37 @@ class App extends Component<Props, IComponentState>
 }
 
 
-export const mapStateToProps =
-                 ({
-                      loggedUser: {username, colorTheme},
-                      counter
-                  }: IAllState): IPropsToUse => ({
-                     username,
-                     colorTheme,
-                     counter,
-                 });
 
-const actionCreators = {
-    setLoggedUser, setColorTheme, incrementCounter, getLoggedUser
-};
 
-export default connect(mapStateToProps, actionCreators)(hot(App));
+interface IUserDto
+{
+    id: number;
+    username: string;
+}
+
+//
+// const mapDispatchToProps = (dispatch: Dispatch) => ({
+//     // incrementCounter: (n?: number) => dispatch(incrementCounter(n)),
+//     incrementCounter,
+//     getLoggedUser: async () => {
+//         const userRequest = await fetch('https://jsonplaceholder.typicode.com/users/1');
+//
+//         const {status} = userRequest;
+//
+//         if (!(status === 200 || status === 301)) {
+//             throw new Error('HTTP Status: ' + status);
+//         }
+//
+//         const {username} = await userRequest.json() as IUserDto;
+//
+//         await dispatch(setLoggedUser(username));
+//
+//         await dispatch(setColorTheme('blue'));
+//
+//     }
+// });
+
+export default connect(mapStateToProps, actionCreators)((hot as any)(App));
+// export default connect(mapStateToProps, actionCreators)(hot(App));
 
 

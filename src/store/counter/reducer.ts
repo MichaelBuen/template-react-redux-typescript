@@ -1,7 +1,8 @@
 import { CounterAction } from './action';
 import { CounterActionType } from './action-type';
+import { Reducer } from 'redux';
 
-export const counter = (state: number = 0, action: CounterAction) =>
+export const counter: Reducer<number, CounterAction> = (state = 0, action) =>
 {
     switch(action.type) {
         case CounterActionType.COUNTER__INCREMENT:
